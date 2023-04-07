@@ -26,8 +26,20 @@ export class OrderService {
   async createOrder(data: OrderCreateDto): Promise<Order> {
     try {
       const order = this.orderRepository.create(data);
+      console.log(order);
 
-      return this.orderRepository.save(order);
+      const newOrder = await this.orderRepository.save(order);
+      console.log(newOrder);
+
+      const orderFind = await this.orderRepository
+        .createQueryBuilder('order')
+        .leftJoinAndSelect('order.user', 'user')
+        .leftJoinAndSelect('order.orderItems', 'orderItem')
+        .leftJoinAndSelect('orderItem.product', 'product')
+        .where('order.id = :id', { id: newOrder.id })
+        .getOne();
+
+      return orderFind;
     } catch (error) {
       throw new Error('Error while creating order');
     }

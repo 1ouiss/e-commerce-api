@@ -45,6 +45,8 @@ export class OrderController {
     @Param('id', ParseIntPipe) id: number,
     @Body() data: OrderUpdateDto,
   ): Promise<Order> {
+    console.log('data', data);
+
     return this.orderService.updateOrder(id, data);
   }
 

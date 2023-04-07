@@ -13,10 +13,7 @@ export class AuthService {
   ) {}
 
   async login(user: UserLoginDto): Promise<any> {
-    console.log('user', user);
-
     const userDb = await this.userService.getOneUserByEmail(user.email);
-    console.log('userDb', userDb);
 
     if (!userDb) {
       return {

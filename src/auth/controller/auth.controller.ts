@@ -9,15 +9,11 @@ export class AuthController {
 
   @Post('login')
   async login(@Body() data: UserLoginDto): Promise<any> {
-    console.log('data', data);
-
     return await this.authService.login(data);
   }
 
   @Post('register')
   async register(@Body() data: UserCreateDto): Promise<any> {
-    console.log('data', data);
-
     return await this.authService.register(data);
   }
 }

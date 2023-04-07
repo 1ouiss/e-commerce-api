@@ -29,8 +29,6 @@ export class ProductService {
       .limit(3)
       .getManyAndCount();
 
-    console.log(query);
-
     return query[0];
   }
 

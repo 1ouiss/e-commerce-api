@@ -48,6 +48,8 @@ export class UserService {
     const query = await this.userRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.orders', 'orders')
+      .leftJoinAndSelect('orders.orderItems', 'orderItems')
+      .leftJoinAndSelect('orderItems.product', 'product')
       .where('user.id = :id', { id })
       .getOne();
     return query;

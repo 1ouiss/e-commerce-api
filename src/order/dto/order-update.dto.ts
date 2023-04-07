@@ -1,7 +1,12 @@
-import { IsNumber } from 'class-validator';
+import { IsArray, IsNumber, IsString } from 'class-validator';
+import { OrderItem } from 'src/orderItem/entity/orderItem.entity';
 import { User } from 'src/user/entity/user.entity';
 
 export class OrderUpdateDto {
+  @IsNumber()
+  id: number;
+
+  @IsString()
   status: string;
 
   @IsNumber()
@@ -9,4 +14,7 @@ export class OrderUpdateDto {
 
   @IsNumber()
   user: User;
+
+  @IsArray()
+  orderItems: OrderItem[];
 }
