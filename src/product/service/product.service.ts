@@ -4,12 +4,14 @@ import { DeleteResult, Repository } from 'typeorm';
 import { ProductCreateDto } from '../dto/product-create.dto';
 import { ProductUpdateDto } from '../dto/product-update.dto';
 import { Injectable } from '@nestjs/common';
+import { OrderItemService } from 'src/orderItem/service/orderItem.service';
 
 Injectable();
 export class ProductService {
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
+    private readonly orderItemService: OrderItemService,
   ) {}
 
   async getAllProducts(): Promise<Product[]> {
@@ -60,7 +62,20 @@ export class ProductService {
     return productUpdate;
   }
 
-  async deleteProduct(id: number): Promise<DeleteResult> {
+  async deleteProduct(id: number) {
+    const product = await this.productRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.category', 'category')
+      .leftJoinAndSelect('product.orderItems', 'orderItem')
+      .where('product.id = :id', { id })
+      .getOne();
+
+    if (product.orderItems.length > 0) {
+      product.orderItems.map(async (orderItem) => {
+        await this.orderItemService.deleteOrderItem(orderItem.id);
+      });
+    }
+
     return await this.productRepository.delete(id);
   }
 }

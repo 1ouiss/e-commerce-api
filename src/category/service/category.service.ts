@@ -53,8 +53,6 @@ export class CategoryService {
       .where('category.id = :id', { id })
       .getOne();
 
-    console.log(category);
-
     category.products.map(async (product) => {
       product.orderItems.map(async (orderItem) => {
         await this.orderItemService.deleteOrderItem(orderItem.id);
